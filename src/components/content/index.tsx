@@ -8,7 +8,7 @@ import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import "@solana/wallet-adapter-react-ui/styles.css";
 
 const Content: FC = () => {
-  const [solBalance, setSolBalance] = useState<any>();
+  const [solBalance, setSolBalance] = useState<any>(0);
   const wallet = useAnchorWallet();
   const network = WalletAdapterNetwork.Devnet;
   const connection = new Connection(clusterApiUrl(network));
@@ -48,6 +48,7 @@ const Content: FC = () => {
     if (!wallet?.publicKey) return;
     const SOL = connection.getAccountInfo(wallet.publicKey);
     SOL.then((res) => {
+      console.log("res", res);
       if (!res) return;
       setSolBalance(res.lamports / LAMPORTS_PER_SOL);
       getAccounts(wallet.publicKey);
@@ -60,7 +61,7 @@ const Content: FC = () => {
         <div style={{ textAlign: "center" }}>
           <WalletMultiButton className='box' />
         </div>
-        {wallet?.publicKey && solBalance && (
+        {wallet?.publicKey && (solBalance == 0 || solBalance) && (
           <>
             <div className='box cur-auto'>{solBalance} SOl</div>
             {!!splTokenAccounts?.length && (
